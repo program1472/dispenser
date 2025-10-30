@@ -1,0 +1,75 @@
+/* ===== Header only ===== */
+header{
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+header .brand{
+  font-weight: 800;
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+/* 탭 내비게이션 */
+header nav{
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+header nav a{
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+header nav a.active,
+header nav a:hover{
+  background: var(--accent-weak);
+}
+
+/* 헤더 보조 텍스트(버전 등) */
+header .small{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 헤더 우측 영역(사용자/버튼/셀렉트) */
+header .row{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 온라인 상태 점 표시가 헤더에 올 때 */
+header .badge.dot{
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  background: #22c55e;
+  margin-right: 6px;
+}
+
+/* 헤더 전용 버튼 스타일 */
+header button{
+  margin-left: 10px;
+  padding: 6px 12px;
+  border: none;
+  background: #555;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
