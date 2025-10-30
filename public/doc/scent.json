@@ -1,0 +1,173 @@
+[
+  {
+    "index": 1,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/그린티(43A).jpg",
+    "alt": "그린티",
+    "title": "그린티",
+    "type": "Green&Herb",
+    "tags": ["프레시","자연","그린"],
+    "reg_date": "2025-10-10",
+    "eta": "2025-02-10",
+    "is_new": true,
+    "price": 14700
+  },
+  {
+    "index": 2,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/라벤더(24CA).jpg",
+    "alt": "라벤더",
+    "title": "라벤더",
+    "type": "Floral",
+    "tags": ["릴렉스","허브","플로럴"],
+    "reg_date": "2025-10-11",
+    "eta": "2025-04-11",
+    "is_new": false,
+    "price": 16200
+  },
+  {
+    "index": 3,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/시트러스버베나(7860A).png",
+    "alt": "시트러스버베나",
+    "title": "시트러스버베나",
+    "type": "Citrus",
+    "tags": ["상큼","레몬","청량감"],
+    "reg_date": "2025-10-12",
+    "eta": "2025-06-12",
+    "is_new": true,
+    "price": 15100
+  },
+  {
+    "index": 4,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/비누(8147B).jpg.png",
+    "alt": "화이트머스크",
+    "title": "화이트머스크 프로그램 테스트",
+    "type": "Cotton",
+    "tags": ["포근함","클린","머스크"],
+    "reg_date": "2025-10-15",
+    "eta": "2025-08-15",
+    "is_new": false,
+    "price": 13800
+  },
+  {
+    "index": 5,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/화이트자스민(40A).png",
+    "alt": "화이트자스민",
+    "title": "화이트자스민",
+    "type": "Floral",
+    "tags": ["플로럴","고급","여성스러움"],
+    "reg_date": "2025-10-09",
+    "eta": "2025-10-09",
+    "is_new": true,
+    "price": 15000
+  },
+  {
+    "index": 6,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/우드세이지 앤 씨솔트(965A).png",
+    "alt": "우드세이지 앤 씨솔트",
+    "title": "우드세이지 앤 씨솔트",
+    "type": "Woody",
+    "tags": ["우디","내추럴","세이지","우디","내추럴","세이지"],
+    "reg_date": "2025-10-08",
+    "eta": "2025-12-08",
+    "is_new": true,
+    "price": 16900
+  },
+  {
+    "index": 7,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/미르토(678P).jpg",
+    "alt": "블랙체리",
+    "title": "블랙체리",
+    "type": "Fruity",
+    "tags": ["달콤함","체리","머스크"],
+    "reg_date": "2025-10-05",
+    "is_new": true,
+    "price": 14100
+  },
+  {
+    "index": 8,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/피오니(1790A).jpg",
+    "alt": "피오니",
+    "title": "피오니",
+    "type": "Floral",
+    "tags": ["플로럴","작약","은은함"],
+    "reg_date": "2025-10-06",
+    "is_new": true,
+    "price": 13400
+  },
+  {
+    "index": 9,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/쿨워터(5CA).jpg",
+    "alt": "화이트로즈",
+    "title": "화이트로즈",
+    "type": "Floral",
+    "tags": ["깨끗함","청초함","로즈"],
+    "reg_date": "2025-10-04",
+    "is_new": false,
+    "price": 13200
+  },
+  {
+    "index": 10,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/상탈(8279P).jpg",
+    "alt": "샌달우드",
+    "title": "샌달우드",
+    "type": "Woody&Spicy",
+    "tags": ["우디","따뜻함","잔향","우디","따뜻함","잔향"],
+    "reg_date": "2025-10-03",
+    "is_new": true,
+    "price": 13800
+  },
+  {
+    "index": 11,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/오션릴리 29A.png",
+    "alt": "그레이앰버",
+    "title": "그레이앰버",
+    "type": "Etc",
+    "tags": ["앰버","해양성","고급스러움"],
+    "reg_date": "2025-10-02",
+    "is_new": true,
+    "price": 15100
+  },
+  {
+    "index": 12,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/베르가못(18A).jpg",
+    "alt": "베르가못",
+    "title": "베르가못",
+    "type": "Citrus",
+    "tags": ["상큼","베르가못","감귤"],
+    "reg_date": "2025-10-01",
+    "is_new": false,
+    "price": 13600
+  },
+  {
+    "index": 13,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/믹스베리(135A).png",
+    "alt": "믹스베리",
+    "title": "믹스베리",
+    "type": "Fruity",
+    "tags": ["과일","상큼함","베리"],
+    "reg_date": "2025-09-29",
+    "is_new": false,
+    "price": 15800
+  },
+  {
+    "index": 14,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/비치워크(2918P).jpg",
+    "alt": "버가모트머스크",
+    "title": "버가모트머스크",
+    "type": "Woody",
+    "tags": ["머스크","산뜻함","부드러움"],
+    "reg_date": "2025-09-27",
+    "is_new": true,
+    "price": 16700
+  },
+  {
+    "index": 15,
+    "img": "http://oilpick.co.kr/MiniERP/oil/image/헤이즐넛(73A).jpg",
+    "alt": "페퍼민트",
+    "title": "페퍼민트",
+    "type": "Etc",
+    "tags": ["청량함","집중력","시원함"],
+    "reg_date": "2025-09-25",
+    "is_new": true,
+    "price": 17900
+  }
+]

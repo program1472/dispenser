@@ -1,0 +1,40 @@
+<div class="wrap">
+<section id="sec-wo" class="card">
+    <div class="card-hd">
+      <div><div class="card-ttl">작업 지시서</div><div class="card-sub">상태 타임라인(수정 불가)·CSV</div></div>
+      <div class="row">
+        <input id="qWO" class="input" placeholder="고객/WO 검색">
+        <select id="fWOType" class="select"><option value="">전체 유형</option><option>출고</option><option>설치</option><option>회수</option><option>프린팅</option><option>콘텐츠</option><option>AS</option></select>
+        <select id="fWOState" class="select"><option value="">전체 상태</option><option>OPEN</option><option>IN_PROGRESS</option><option>DONE</option></select>
+        <button id="woCsv" class="btn">CSV</button>
+        <button id="btnWoFromTicket" class="btn primary">고객요청 → WO 자동생성</button>
+      </div>
+    </div>
+    <div class="card-bd table-wrap">
+      <table class="table" id="tblWO"><thead><tr><th>WO ID</th><th>유형</th><th>고객</th><th>시리얼</th><th>마감일</th><th>상태</th><th>진행</th></tr></thead><tbody><tr><td>WO1000</td><td>출고</td><td>그린밸리 골프장</td><td>AP5-250001</td><td>2025-02-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1001</td><td>설치</td><td>그린밸리 골프장</td><td>AP5-250002</td><td>2025-03-10</td><td>IN_PROGRESS</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:60%"></div></div></div></td></tr><tr><td>WO1002</td><td>설치</td><td>스마일 예식장</td><td>AP5-250010</td><td>2025-03-01</td><td>IN_PROGRESS</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:60%"></div></div></div></td></tr><tr><td>WO1003</td><td>회수</td><td>메디웰 병원</td><td>AP5-249900</td><td>2025-01-05</td><td>DONE</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><div class="progress" style="flex:1"><div style="width:100%"></div></div></div></td></tr><tr><td>WO1004</td><td>프린팅</td><td>메디웰 병원</td><td>AP5-249901</td><td>2025-02-05</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1005</td><td>프린팅</td><td>오션뷰 호텔</td><td>AP5-250050</td><td>2025-04-15</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1006</td><td>콘텐츠</td><td>블루힐 골프클럽</td><td>AP5-249800</td><td>2024-12-01</td><td>IN_PROGRESS</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:60%"></div></div></div></td></tr><tr><td>WO1007</td><td>AS</td><td>블루힐 골프클럽</td><td>AP5-249801</td><td>2025-01-01</td><td>DONE</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><div class="progress" style="flex:1"><div style="width:100%"></div></div></div></td></tr><tr><td>WO1008</td><td>출고</td><td>블루힐 골프클럽</td><td>AP5-249802</td><td>2025-02-01</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1009</td><td>AS</td><td>라이트웨딩</td><td>AP5-250120</td><td>2025-07-20</td><td>DONE</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><div class="progress" style="flex:1"><div style="width:100%"></div></div></div></td></tr><tr><td>WO1010</td><td>출고</td><td>썬샤인 병원</td><td>AP5-249700</td><td>2024-11-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1011</td><td>설치</td><td>마운틴 리조트</td><td>AP5-250080</td><td>2025-05-01</td><td>IN_PROGRESS</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:60%"></div></div></div></td></tr><tr><td>WO1012</td><td>회수</td><td>마운틴 리조트</td><td>AP5-250081</td><td>2025-06-01</td><td>DONE</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><div class="progress" style="flex:1"><div style="width:100%"></div></div></div></td></tr><tr><td>WO1013</td><td>회수</td><td>피닉스 골프</td><td>AP5-250150</td><td>2025-08-05</td><td>DONE</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><div class="progress" style="flex:1"><div style="width:100%"></div></div></div></td></tr><tr><td>WO1014</td><td>프린팅</td><td>하모니 예식홀</td><td>AP5-249950</td><td>2025-01-28</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1015</td><td>프린팅</td><td>임시 고객</td><td>AP5-240015</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1016</td><td>콘텐츠</td><td>임시 고객</td><td>AP5-240016</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1017</td><td>AS</td><td>임시 고객</td><td>AP5-240017</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1018</td><td>출고</td><td>임시 고객</td><td>AP5-240018</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1019</td><td>설치</td><td>임시 고객</td><td>AP5-240019</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1020</td><td>회수</td><td>임시 고객</td><td>AP5-240020</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr><tr><td>WO1021</td><td>프린팅</td><td>임시 고객</td><td>AP5-240021</td><td>2025-10-10</td><td>OPEN</td>
+    <td><div class="timeline"><span class="dot active"></span><span class="dot "></span><span class="dot "></span><div class="progress" style="flex:1"><div style="width:20%"></div></div></div></td></tr></tbody></table>
+      <div class="small">※ 상태는 조회만 가능(OPEN→IN_PROGRESS→DONE). 고객 포털 요청 시 자동 WO 생성.</div>
+    </div>
+  </section>
+</div>
