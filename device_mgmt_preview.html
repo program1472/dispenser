@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기기관리 페이지 - 미리보기</title>
+    <style>
+        /* 기본 스타일 (customer.css) */
+        :root {
+            --border: #e5e7eb;
+            --muted: #6b7280;
+            --fg: #111827;
+            --bg: #f8fafc;
+            --white: #fff;
+            --brand: #10b981;
+            --accent: #047857;
+            --warn: #dc2626;
+            --ok: #065f46;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', Arial, sans-serif;
+        }
+
+        .wrap {
+            padding: 16px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+        }
+
+        .card-hd {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .card-ttl {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .card-bd {
+            padding: 16px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .kpi {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px;
+            background: #ecfdf5;
+        }
+
+        .kpi .v {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ok);
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .input {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .select {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn.primary {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: var(--ok);
+        }
+
+        .sticky-filter {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 15;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: saturate(140%) blur(2px);
+        }
+
+        .sticky-filter .inner {
+            display: flex;
+            align-items: center;
+            gap: 10px 12px;
+            padding: 10px 16px;
+            flex-wrap: wrap;
+        }
+
+        .img-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        .img-item {
+            position: relative;
+            width: 75px;
+            height: 75px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .img-item:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .gear-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 32px;
+            text-align: center;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .gear-btn:hover {
+            background: #f9fafb;
+        }
+
+        /* 고도화된 스타일 */
+        .enhanced-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+
+        .table-enhanced {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .table-enhanced thead {
+            background: #f9fafb;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table-enhanced th {
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--border);
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .table-enhanced th:hover {
+            background: #f3f4f6;
+        }
+
+        .table-enhanced th.sortable::after {
+            content: ' ↕';
+            opacity: 0.3;
+            font-size: 10px;
+        }
+
+        .table-enhanced th.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .table-enhanced th.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .table-enhanced td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .table-enhanced tbody tr {
+            transition: background-color 0.15s;
+        }
+
+        .table-enhanced tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        .table-enhanced tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        .table-enhanced tbody tr.filtered-out {
+            display: none;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-info {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            min-width: 36px;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #f9fafb;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .delete-btn {
+            padding: 4px 8px;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            background: #fef2f2;
+            color: #b91c1c;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .delete-btn:hover {
+            background: #fee2e2;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .enhanced-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 통계 대시보드 -->
+    <div class="wrap">
+        <section class="card">
+            <div class="card-hd">
+                <div class="card-ttl">통계 요약</div>
+            </div>
+            <div class="card-bd">
+                <div class="kpi-grid">
+                    <div class="kpi">
+                        <div class="small">총 기기 수</div>
+                        <div class="v">9대</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="small">사업장 수</div>
+                        <div class="v">2개</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="small">설치 장소</div>
+                        <div class="v">7곳</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 필터 -->
+    <div class="sticky-filter">
+        <div class="inner">
+            <span class="small" style="font-weight:700;color:var(--accent)">사업장</span>
+            <select id="branchSel" class="select">
+                <option value="">전체</option>
+                <option value="A지점">A지점</option>
+                <option value="B지점">B지점</option>
+            </select>
+
+            <span class="small" style="font-weight:700;color:var(--accent)">그룹</span>
+            <select id="groupSel" class="select">
+                <option value="">전체</option>
+            </select>
+
+            <span class="small" style="font-weight:700;color:var(--accent)">설치위치</span>
+            <select id="locationSel" class="select">
+                <option value="">전체</option>
+            </select>
+
+            <button id="filterBtn" class="btn primary icon-btn">
+                <span>필터 적용</span>
+            </button>
+
+            <button id="resetFilter" class="btn">초기화</button>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <section class="card" id="tab-Devices">
+            <div class="card-hd">
+                <div>
+                    <div class="card-ttl">기기관리</div>
+                    <div class="card-sub">설치일/장소/시리얼 · 선택 향/콘텐츠</div>
+                </div>
+                <div class="enhanced-header">
+                    <div class="search-box">
+                        <input id="searchInput" class="input" placeholder="🔍 시리얼 번호 또는 설치 장소 검색...">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn primary icon-btn" id="exportCSV">
+                            <span>📥 CSV 내보내기</span>
+                        </button>
+                        <button class="btn" id="resetSeed">🔄 테스트 데이터 재설정</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-bd">
+                <div class="table-wrapper">
+                    <table class="table-enhanced" id="deviceTbl">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="branch">사업장</th>
+                                <th class="sortable" data-sort="group">그룹</th>
+                                <th class="sortable" data-sort="location">설치 장소</th>
+                                <th class="sortable" data-sort="serial">시리얼</th>
+                                <th class="sortable" data-sort="date">설치일</th>
+                                <th>향</th>
+                                <th>콘텐츠</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deviceTbody">
+                            <tr data-row="0">
+                                <td data-branch="A지점">A지점</td>
+                                <td data-group="2층">2층</td>
+                                <td data-location="회의실 1">회의실 1</td>
+                                <td data-serial="AP5-250001"><strong>AP5-250001</strong></td>
+                                <td data-date="2025-01-10">2025-01-10</td>
+                                <td>
+                                    <div class="img-row">
+                                        <div class="img-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <span class="tooltip">라벤더</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                            <span class="tooltip">로즈</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                            <span class="tooltip">시트러스</span>
+                                        </div>
+                                        <button class="gear-btn" title="향 설정">⚙</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="img-row">
+                                        <div class="img-item" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                                            <span class="tooltip">광고 콘텐츠 A</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                                            <span class="tooltip">광고 콘텐츠 B</span>
+                                        </div>
+                                        <button class="gear-btn" title="콘텐츠 설정">⚙</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="delete-btn" onclick="deleteRow(0)">삭제</button>
+                                </td>
+                            </tr>
+                            <tr data-row="1">
+                                <td data-branch="A지점">A지점</td>
+                                <td data-group="지하">지하</td>
+                                <td data-location="전기실">전기실</td>
+                                <td data-serial="AP5-250002"><strong>AP5-250002</strong></td>
+                                <td data-date="2025-01-10">2025-01-10</td>
+                                <td>
+                                    <div class="img-row">
+                                        <div class="img-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <span class="tooltip">민트</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                            <span class="tooltip">바닐라</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                            <span class="tooltip">허브</span>
+                                        </div>
+                                        <button class="gear-btn" title="향 설정">⚙</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="img-row">
+                                        <div class="img-item" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                                            <span class="tooltip">광고 콘텐츠 C</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                                            <span class="tooltip">광고 콘텐츠 D</span>
+                                        </div>
+                                        <button class="gear-btn" title="콘텐츠 설정">⚙</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="delete-btn" onclick="deleteRow(1)">삭제</button>
+                                </td>
+                            </tr>
+                            <tr data-row="2">
+                                <td data-branch="B지점">B지점</td>
+                                <td data-group="1층">1층</td>
+                                <td data-location="리셉션">리셉션</td>
+                                <td data-serial="AP5-250003"><strong>AP5-250003</strong></td>
+                                <td data-date="2025-01-10">2025-01-10</td>
+                                <td>
+                                    <div class="img-row">
+                                        <div class="img-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <span class="tooltip">우디</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                            <span class="tooltip">머스크</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                            <span class="tooltip">재스민</span>
+                                        </div>
+                                        <button class="gear-btn" title="향 설정">⚙</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="img-row">
+                                        <div class="img-item" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                                            <span class="tooltip">광고 콘텐츠 E</span>
+                                        </div>
+                                        <div class="img-item" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                                            <span class="tooltip">광고 콘텐츠 F</span>
+                                        </div>
+                                        <button class="gear-btn" title="콘텐츠 설정">⚙</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="delete-btn" onclick="deleteRow(2)">삭제</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination" id="pagination">
+                    <div class="pagination-info" id="paginationInfo">
+                        전체 <span id="totalRows">0</span>개 중 <span id="displayedRows">0</span>개 표시
+                    </div>
+                    <div class="pagination-controls" id="paginationControls">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+
+                <div class="small" style="margin-top:12px">
+                    ※ 향 6종 무상 제공, 설치일 기준 2개월마다 자동 공급. 첫 구입 시 1개는 고객 선택, 나머지는 랜덤 공급.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 데이터
+        var filterData = [
+            {
+                "branch": "A지점",
+                "groups": [
+                    {
+                        "group": "1층",
+                        "locations": [
+                            { "location": "홀" },
+                            { "location": "화장실" },
+                            { "location": "탕비실" }
+                        ]
+                    },
+                    {
+                        "group": "2층",
+                        "locations": [
+                            { "location": "회의실 1" },
+                            { "location": "회의실 2" },
+                            { "location": "창고" }
+                        ]
+                    },
+                    {
+                        "group": "지하",
+                        "locations": [
+                            { "location": "전기실" },
+                            { "location": "기계실" }
+                        ]
+                    }
+                ]
+            },
+            {
+                "branch": "B지점",
+                "groups": [
+                    {
+                        "group": "1층",
+                        "locations": [
+                            { "location": "리셉션" },
+                            { "location": "홀" },
+                            { "location": "화장실" }
+                        ]
+                    },
+                    {
+                        "group": "별관",
+                        "locations": [
+                            { "location": "회의실 A" },
+                            { "location": "회의실 B" },
+                            { "location": "라운지" }
+                        ]
+                    },
+                    {
+                        "group": "옥상",
+                        "locations": [
+                            { "location": "흡연구역" },
+                            { "location": "휴게공간" }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        var currentSort = { column: null, direction: 'asc' };
+        var currentPage = 1;
+        var rowsPerPage = 10;
+
+        // 필터 기능
+        document.getElementById('branchSel').addEventListener('change', function() {
+            var branch = this.value;
+            var groupSel = document.getElementById('groupSel');
+            var locationSel = document.getElementById('locationSel');
+
+            groupSel.innerHTML = '<option value="">전체</option>';
+            locationSel.innerHTML = '<option value="">전체</option>';
+
+            if(!branch) return;
+
+            var branchData = filterData.find(function(item) { return item.branch === branch; });
+            if(!branchData) return;
+
+            branchData.groups.forEach(function(g) {
+                var opt = document.createElement('option');
+                opt.value = g.group;
+                opt.textContent = g.group;
+                groupSel.appendChild(opt);
+            });
+        });
+
+        document.getElementById('groupSel').addEventListener('change', function() {
+            var branch = document.getElementById('branchSel').value;
+            var group = this.value;
+            var locationSel = document.getElementById('locationSel');
+
+            locationSel.innerHTML = '<option value="">전체</option>';
+
+            if(!branch || !group) return;
+
+            var branchData = filterData.find(function(item) { return item.branch === branch; });
+            if(!branchData) return;
+
+            var groupData = branchData.groups.find(function(g) { return g.group === group; });
+            if(!groupData) return;
+
+            groupData.locations.forEach(function(loc) {
+                var opt = document.createElement('option');
+                opt.value = loc.location;
+                opt.textContent = loc.location;
+                locationSel.appendChild(opt);
+            });
+        });
+
+        document.getElementById('filterBtn').addEventListener('click', applyFilters);
+        document.getElementById('resetFilter').addEventListener('click', function() {
+            document.getElementById('branchSel').value = '';
+            document.getElementById('groupSel').value = '';
+            document.getElementById('locationSel').value = '';
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+        });
+
+        function applyFilters() {
+            var branchFilter = document.getElementById('branchSel').value.toLowerCase();
+            var groupFilter = document.getElementById('groupSel').value.toLowerCase();
+            var locationFilter = document.getElementById('locationSel').value.toLowerCase();
+            var searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+            var rows = document.querySelectorAll('#deviceTbody tr');
+            var visibleCount = 0;
+
+            rows.forEach(function(row) {
+                var branch = (row.querySelector('[data-branch]')?.dataset.branch || '').toLowerCase();
+                var group = (row.querySelector('[data-group]')?.dataset.group || '').toLowerCase();
+                var location = (row.querySelector('[data-location]')?.dataset.location || '').toLowerCase();
+                var serial = (row.querySelector('[data-serial]')?.dataset.serial || '').toLowerCase();
+
+                var matchBranch = !branchFilter || branch === branchFilter;
+                var matchGroup = !groupFilter || group === groupFilter;
+                var matchLocation = !locationFilter || location === locationFilter;
+                var matchSearch = !searchQuery || serial.includes(searchQuery) || location.includes(searchQuery);
+
+                if (matchBranch && matchGroup && matchLocation && matchSearch) {
+                    row.classList.remove('filtered-out');
+                    visibleCount++;
+                } else {
+                    row.classList.add('filtered-out');
+                }
+            });
+
+            updatePaginationInfo();
+            renderPagination();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            applyFilters();
+        });
+
+        // 정렬 기능
+        document.querySelectorAll('.table-enhanced th.sortable').forEach(function(header) {
+            header.addEventListener('click', function() {
+                var column = this.dataset.sort;
+
+                if (currentSort.column === column) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = column;
+                    currentSort.direction = 'asc';
+                }
+
+                document.querySelectorAll('.table-enhanced th').forEach(function(th) {
+                    th.classList.remove('sort-asc', 'sort-desc');
+                });
+                this.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+
+                sortTable(column, currentSort.direction);
+            });
+        });
+
+        function sortTable(column, direction) {
+            var tbody = document.getElementById('deviceTbody');
+            var rows = Array.from(tbody.querySelectorAll('tr'));
+
+            rows.sort(function(a, b) {
+                var aVal = a.querySelector('[data-' + column + ']')?.dataset[column] || '';
+                var bVal = b.querySelector('[data-' + column + ']')?.dataset[column] || '';
+
+                if (direction === 'asc') {
+                    return aVal.localeCompare(bVal);
+                } else {
+                    return bVal.localeCompare(aVal);
+                }
+            });
+
+            rows.forEach(function(row) {
+                tbody.appendChild(row);
+            });
+        }
+
+        // 페이지네이션
+        function updatePaginationInfo() {
+            var allRows = document.querySelectorAll('#deviceTbody tr');
+            var visibleRows = document.querySelectorAll('#deviceTbody tr:not(.filtered-out)');
+
+            document.getElementById('totalRows').textContent = allRows.length;
+            document.getElementById('displayedRows').textContent = visibleRows.length;
+        }
+
+        function renderPagination() {
+            var visibleRows = document.querySelectorAll('#deviceTbody tr:not(.filtered-out)');
+            var totalPages = Math.ceil(visibleRows.length / rowsPerPage);
+
+            var controls = document.getElementById('paginationControls');
+            controls.innerHTML = '';
+
+            var prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = '‹';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            };
+            controls.appendChild(prevBtn);
+
+            for (var i = 1; i <= totalPages; i++) {
+                var pageBtn = document.createElement('button');
+                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.textContent = i;
+                pageBtn.dataset.page = i;
+                pageBtn.onclick = function() {
+                    currentPage = parseInt(this.dataset.page);
+                    showPage(currentPage);
+                };
+                controls.appendChild(pageBtn);
+            }
+
+            var nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = '›';
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.onclick = function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            };
+            controls.appendChild(nextBtn);
+
+            showPage(currentPage);
+        }
+
+        function showPage(page) {
+            var visibleRows = Array.from(document.querySelectorAll('#deviceTbody tr:not(.filtered-out)'));
+            var start = (page - 1) * rowsPerPage;
+            var end = start + rowsPerPage;
+
+            visibleRows.forEach(function(row, idx) {
+                if (idx >= start && idx < end) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.querySelectorAll('.page-btn[data-page]').forEach(function(btn) {
+                btn.classList.toggle('active', parseInt(btn.dataset.page) === page);
+            });
+        }
+
+        // CSV 내보내기
+        document.getElementById('exportCSV').addEventListener('click', function() {
+            var rows = document.querySelectorAll('#deviceTbody tr:not(.filtered-out)');
+            var csv = [];
+
+            csv.push('사업장,그룹,설치장소,시리얼,설치일');
+
+            rows.forEach(function(row) {
+                if (row.style.display !== 'none') {
+                    var branch = row.querySelector('[data-branch]').dataset.branch;
+                    var group = row.querySelector('[data-group]').dataset.group;
+                    var location = row.querySelector('[data-location]').dataset.location;
+                    var serial = row.querySelector('[data-serial]').dataset.serial;
+                    var date = row.querySelector('[data-date]').dataset.date;
+
+                    csv.push([branch, group, location, serial, date].join(','));
+                }
+            });
+
+            var csvContent = '\uFEFF' + csv.join('\n');
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement('a');
+            var url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', '기기관리_' + new Date().toISOString().split('T')[0] + '.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // 행 삭제
+        function deleteRow(rowIndex) {
+            if (confirm('이 기기를 삭제하시겠습니까?')) {
+                var row = document.querySelector('tr[data-row="' + rowIndex + '"]');
+                if (row) {
+                    row.remove();
+                    updatePaginationInfo();
+                    renderPagination();
+                }
+            }
+        }
+
+        document.getElementById('resetSeed').addEventListener('click', function() {
+            if (confirm('테스트 데이터를 재설정하시겠습니까?')) {
+                location.reload();
+            }
+        });
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePaginationInfo();
+            renderPagination();
+        });
+    </script>
+</body>
+</html>
