@@ -7,17 +7,21 @@
 
 	define('IS_DEBUG', true);
 
+	// 세션 초기화
+	require_once __DIR__ . '/ini.php';
+
 	// 동적 HOST (고정 IP 대신 권장)
 	$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 	$host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
 	define('HOST', $scheme . '://' . $host);
 
 	// 루트 경로
-	$DOCROOT = $_SERVER['DOCUMENT_ROOT'];	//rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/\\');
-	define('ROOT', $DOCROOT);
+	// public 디렉토리가 웹 루트
+	$DOCROOT = dirname(__DIR__); // public의 부모 디렉토리
+	define('ROOT', $DOCROOT . '/public');
 
 	define('SRC', '/dispenser');                 // 웹 경로
-	define('DOC_ROOT', ROOT . SRC);        // 물리 경로
+	define('DOC_ROOT', ROOT);        // 물리 경로 (public)
 	define('INC_ROOT', DOC_ROOT . '/inc');
 	define('FUNCTIONS_ROOT', INC_ROOT . '/functions');
 	define('JS_ROOT', DOC_ROOT . '/js');
@@ -35,7 +39,8 @@
 
 	define('OFFICE_NAME', '(주)올투그린파트너스');
 
-	require_once ROOT."/doc/TCPDF/tcpdf.php";
+	// TCPDF는 composer로 설치됨 (vendor/autoload.php를 통해 로드)
+	// require_once ROOT."/doc/TCPDF/tcpdf.php";
 	require_once FUNCTIONS_ROOT.'/file.php';
 	require_once FUNCTIONS_ROOT.'/date.php';
 	require_once FUNCTIONS_ROOT."/curl.php";
