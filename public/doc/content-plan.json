@@ -1,0 +1,6 @@
+{
+  "Basic": { "comment": "프린팅", "price": "11,000원" },
+  "Standard": { "comment": "워딩변경", "price": "22,000원" },
+  "Deluxe": { "comment": "워딩 + 이미지 변경", "price": "110,000원" },
+  "Premium": { "comment": "맞춤형", "price": "220,000원" }
+}

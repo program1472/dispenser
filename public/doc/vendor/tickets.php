@@ -1,0 +1,14 @@
+<div class="wrap">
+<section id="sec-tickets" class="card">
+    <div class="card-hd">
+      <div><div class="card-ttl">고객 문의/요청</div><div class="card-sub">실시간 확인 · 본사 이관/답변</div></div>
+      <div class="row">
+        <select id="fTicket" class="select"><option value="">전체</option><option>OPEN</option><option>IN_PROGRESS</option><option>DONE</option></select>
+        <button id="btnTicketNew" class="btn">임시 티켓 추가</button>
+      </div>
+    </div>
+    <div class="card-bd table-wrap">
+      <table class="table" id="tblTicket"><thead><tr><th>ID</th><th>고객</th><th>유형</th><th>내용</th><th>상태</th><th>일자</th><th>처리</th></tr></thead><tbody><tr><td>T1001</td><td>그린밸리 골프장</td><td>오일</td><td>400ml x 4</td><td>OPEN</td><td>2025-09-12</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1002</td><td>스마일 예식장</td><td>콘텐츠</td><td>안전수칙 수정</td><td>IN_PROGRESS</td><td>2025-09-10</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1003</td><td>메디웰 병원</td><td>AS</td><td>소음 점검</td><td>OPEN</td><td>2025-09-08</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1004</td><td>오션뷰 호텔</td><td>프린팅</td><td>A3 2건</td><td>DONE</td><td>2025-09-01</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1005</td><td>블루힐 골프클럽</td><td>오일</td><td>랜덤 6종 요청</td><td>OPEN</td><td>2025-09-15</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1006</td><td>마운틴 리조트</td><td>콘텐츠</td><td>시즌 프로모션</td><td>OPEN</td><td>2025-09-20</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1007</td><td>피닉스 골프</td><td>AS</td><td>스위치 교체</td><td>IN_PROGRESS</td><td>2025-09-05</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1008</td><td>하모니 예식홀</td><td>프린팅</td><td>비상안내</td><td>DONE</td><td>2025-08-28</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1009</td><td>썬샤인 병원</td><td>오일</td><td>화이트머스크</td><td>OPEN</td><td>2025-09-18</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1010</td><td>라이트웨딩</td><td>콘텐츠</td><td>웨딩안내</td><td>OPEN</td><td>2025-09-22</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1011</td><td>임시 고객</td><td>AS</td><td>테스트</td><td>OPEN</td><td>2025-10-01</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr><tr><td>T1012</td><td>임시 고객</td><td>AS</td><td>테스트</td><td>OPEN</td><td>2025-10-01</td><td><button class="btn">답변</button> <button class="btn">본사 이관</button></td></tr></tbody></table>
+    </div>
+  </section>
+</div>
