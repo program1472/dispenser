@@ -1045,6 +1045,8 @@ function action_comment_store_json(){
   $body=trim($_POST['body'] ?? $_GET['body'] ?? '');
   if($uid<=0 || $body==='') fail_msg('코멘트를 입력하세요.', 422);
 
+  // NOTE: dev_request_comments 테이블은 이제 config/schema.sql에 정의되어 있습니다.
+  // 아래 CREATE TABLE은 더 이상 필요하지 않지만, 하위 호환성을 위해 유지합니다.
   $con->query("CREATE TABLE IF NOT EXISTS dev_request_comments (
     comment_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     uid BIGINT UNSIGNED NOT NULL,
