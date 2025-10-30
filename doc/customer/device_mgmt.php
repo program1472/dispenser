@@ -236,6 +236,88 @@ $encContent  = encryptValue($today . '/content_lib');
         justify-content: flex-start;
     }
 }
+
+/* 이미지 확대 모달 */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+}
+
+.image-modal.active {
+    display: flex;
+}
+
+.image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.image-modal-img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.image-modal-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.image-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.img-item {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.img-item:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .image-modal-close {
+        top: -50px;
+        right: 10px;
+    }
+}
 </style>
 
 <!-- 통계 대시보드 -->
@@ -373,7 +455,10 @@ $encContent  = encryptValue($today . '/content_lib');
                             <td>
                                 <div class="img-row">
                                     <?php foreach($scents as $scent): ?>
-                                    <div class="img-item" style="background-image:url('<?php echo htmlspecialchars($scent['img']); ?>')">
+                                    <div class="img-item" style="background-image:url('<?php echo htmlspecialchars($scent['img']); ?>')"
+                                         data-img="<?php echo htmlspecialchars($scent['img']); ?>"
+                                         data-title="<?php echo htmlspecialchars($scent['title']); ?>"
+                                         onclick="openImageModal(this)">
                                         <span class="tooltip"><?php echo htmlspecialchars($scent['title']); ?></span>
                                     </div>
                                     <?php endforeach; ?>
@@ -383,7 +468,10 @@ $encContent  = encryptValue($today . '/content_lib');
                             <td>
                                 <div class="img-row">
                                     <?php foreach($contents as $content): ?>
-                                    <div class="img-item" style="background-image:url('<?php echo htmlspecialchars($content['이미지']); ?>')">
+                                    <div class="img-item" style="background-image:url('<?php echo htmlspecialchars($content['이미지']); ?>')"
+                                         data-img="<?php echo htmlspecialchars($content['이미지']); ?>"
+                                         data-title="<?php echo htmlspecialchars($content['품명']); ?>"
+                                         onclick="openImageModal(this)">
                                         <span class="tooltip"><?php echo htmlspecialchars($content['품명']); ?></span>
                                     </div>
                                     <?php endforeach; ?>
@@ -414,6 +502,15 @@ $encContent  = encryptValue($today . '/content_lib');
             </div>
         </div>
     </section>
+</div>
+
+<!-- 이미지 확대 모달 -->
+<div class="image-modal" id="imageModal">
+    <div class="image-modal-content">
+        <button class="image-modal-close" onclick="closeImageModal()">×</button>
+        <img class="image-modal-img" id="modalImage" src="" alt="">
+        <div class="image-modal-title" id="modalTitle"></div>
+    </div>
 </div>
 
 <script>
@@ -772,6 +869,42 @@ document.querySelectorAll('.branch-sel').forEach(function(branchSel) {
 document.getElementById('resetSeed').addEventListener('click', function() {
     if (confirm('테스트 데이터를 재설정하시겠습니까?')) {
         location.reload();
+    }
+});
+
+// ============================================
+// 이미지 확대 모달
+// ============================================
+
+function openImageModal(element) {
+    var imgUrl = element.getAttribute('data-img');
+    var title = element.getAttribute('data-title');
+
+    var modal = document.getElementById('imageModal');
+    var modalImg = document.getElementById('modalImage');
+    var modalTitle = document.getElementById('modalTitle');
+
+    modal.classList.add('active');
+    modalImg.src = imgUrl;
+    modalTitle.textContent = title;
+
+    // ESC 키로 닫기
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+}
+
+function closeImageModal() {
+    var modal = document.getElementById('imageModal');
+    modal.classList.remove('active');
+}
+
+// 모달 배경 클릭 시 닫기
+document.getElementById('imageModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeImageModal();
     }
 });
 
