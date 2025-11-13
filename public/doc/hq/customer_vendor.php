@@ -1,0 +1,652 @@
+<?php
+/**
+ * HQ 고객관리 > 벤더
+ * 벤더별 고객 현황
+ */
+
+// ========================================
+// Ajax 요청 처리
+// ========================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
+    $action = $_POST['action'] ?? '';
+
+    try {
+        switch ($action) {
+            case 'get_vendor':
+                $vendorId = trim($_POST['vendor_id'] ?? '');
+
+                if (empty($vendorId)) {
+                    $response['error'] = sendError(400, true);
+                    Finish();
+                }
+
+                $tb_nm = 'vendors';
+                $vendorIdEsc = escapeString($vendorId);
+                $sql = "SELECT v.*, u.email, u.phone, u.name as user_name
+                        FROM `vendors` v
+                        LEFT JOIN `users` u ON v.user_id = u.user_id
+                        WHERE v.`vendor_id` = '{$vendorIdEsc}' AND v.deleted_at IS NULL";
+                $response['item']['sql'] = $sql;
+                $vendor = query($sql);
+
+                if (!empty($vendor)) {
+                    $response['result'] = true;
+                    $response['item'] = $vendor[0];
+                } else {
+                    $response['error'] = ['msg' => '벤더를 찾을 수 없습니다.', 'code' => 404];
+                }
+                Finish();
+                break;
+
+            case 'add_vendor':
+                $name = trim($_POST['name'] ?? '');
+                $businessNumber = trim($_POST['business_number'] ?? '');
+                $ceoName = trim($_POST['ceo_name'] ?? '');
+                $phone = trim($_POST['phone'] ?? '');
+                $email = trim($_POST['email'] ?? '');
+                $address = trim($_POST['address'] ?? '');
+                $notes = trim($_POST['notes'] ?? '');
+
+                if (empty($name)) {
+                    $response['error'] = ['msg' => '벤더명은 필수입니다.', 'code' => 400];
+                    Finish();
+                }
+
+                // vendor_id 생성 (V + YYYYMMDD + 4자리 시퀀스)
+                $today = date('Ymd');
+                $prefix = 'V' . $today;
+
+                $tb_nm = 'vendors';
+                $seqSql = "SELECT `vendor_id` FROM `vendors` WHERE `vendor_id` LIKE '{$prefix}%' ORDER BY `vendor_id` DESC LIMIT 1";
+                $response['item']['seqSql'] = $seqSql;
+                $seqResult = query($seqSql);
+
+                if (!empty($seqResult)) {
+                    $lastSeq = intval(substr($seqResult[0]['vendor_id'], -4));
+                    $newSeq = $lastSeq + 1;
+                } else {
+                    $newSeq = 1;
+                }
+
+                $vendorId = $prefix . str_pad($newSeq, 4, '0', STR_PAD_LEFT);
+
+                $nameEsc = escapeString($name);
+                $businessNumberEsc = escapeString($businessNumber);
+                $ceoNameEsc = escapeString($ceoName);
+                $phoneEsc = escapeString($phone);
+                $emailEsc = escapeString($email);
+                $addressEsc = escapeString($address);
+                $notesEsc = escapeString($notes);
+
+                $sql = "INSERT INTO `vendors`
+                        (`vendor_id`, `name`, `business_number`, `ceo_name`, `phone`, `email`, `address`, `notes`, `is_active`, `created_at`)
+                        VALUES ('{$vendorId}', '{$nameEsc}', '{$businessNumberEsc}', '{$ceoNameEsc}', '{$phoneEsc}', '{$emailEsc}', '{$addressEsc}', '{$notesEsc}', 1, NOW())";
+                query($sql);
+$response['item']['sql'] = $sql;
+                $response['result'] = true;
+                $response['item'] = ['vendor_id' => $vendorId, 'message' => '벤더가 성공적으로 등록되었습니다.'];
+                Finish();
+                break;
+
+            case 'update_vendor':
+                $vendorId = trim($_POST['vendor_id'] ?? '');
+                $name = trim($_POST['name'] ?? '');
+                $businessNumber = trim($_POST['business_number'] ?? '');
+                $ceoName = trim($_POST['ceo_name'] ?? '');
+                $phone = trim($_POST['phone'] ?? '');
+                $email = trim($_POST['email'] ?? '');
+                $address = trim($_POST['address'] ?? '');
+                $notes = trim($_POST['notes'] ?? '');
+
+                if (empty($vendorId) || empty($name)) {
+                    $response['error'] = ['msg' => '벤더 ID와 벤더명은 필수입니다.', 'code' => 400];
+                    Finish();
+                }
+
+                $tb_nm = 'vendors';
+                $vendorIdEsc = escapeString($vendorId);
+                $nameEsc = escapeString($name);
+                $businessNumberEsc = escapeString($businessNumber);
+                $ceoNameEsc = escapeString($ceoName);
+                $phoneEsc = escapeString($phone);
+                $emailEsc = escapeString($email);
+                $addressEsc = escapeString($address);
+                $notesEsc = escapeString($notes);
+
+                $sql = "UPDATE `vendors` SET
+                        `name` = '{$nameEsc}',
+                        `business_number` = '{$businessNumberEsc}',
+                        `ceo_name` = '{$ceoNameEsc}',
+                        `phone` = '{$phoneEsc}',
+                        `email` = '{$emailEsc}',
+                        `address` = '{$addressEsc}',
+                        `notes` = '{$notesEsc}',
+                        `updated_at` = NOW()
+                        WHERE `vendor_id` = '{$vendorIdEsc}'";
+                query($sql);
+$response['item']['sql'] = $sql;
+                $response['result'] = true;
+                $response['item'] = ['message' => '벤더 정보가 수정되었습니다.'];
+                Finish();
+                break;
+
+            case 'toggle_vendor_status':
+                $vendorId = trim($_POST['vendor_id'] ?? '');
+                $isActive = trim($_POST['is_active'] ?? '1');
+
+                if (empty($vendorId)) {
+                    $response['error'] = sendError(400, true);
+                    Finish();
+                }
+
+                $tb_nm = 'vendors';
+                $vendorIdEsc = escapeString($vendorId);
+                $isActiveEsc = escapeString($isActive);
+
+                $sql = "UPDATE `vendors` SET `is_active` = '{$isActiveEsc}', `updated_at` = NOW() WHERE `vendor_id` = '{$vendorIdEsc}'";
+                query($sql);
+$response['item']['sql'] = $sql;
+                $statusText = $isActive == '1' ? '활성화' : '비활성화';
+                $response['result'] = true;
+                $response['item'] = ['message' => "벤더가 {$statusText}되었습니다."];
+                Finish();
+                break;
+
+            case 'delete_vendor':
+                $vendorId = trim($_POST['vendor_id'] ?? '');
+
+                if (empty($vendorId)) {
+                    $response['error'] = sendError(400, true);
+                    Finish();
+                }
+
+                // 연관된 고객이 있는지 확인
+                $tb_nm = 'customers';
+                $vendorIdEsc = escapeString($vendorId);
+                $checkSql = "SELECT COUNT(*) as `count` FROM `customers` WHERE `vendor_id` = '{$vendorIdEsc}' AND `is_active` = 1";
+                $response['item']['checkSql'] = $checkSql;
+                $checkResult = query($checkSql);
+
+                if (!empty($checkResult) && $checkResult[0]['count'] > 0) {
+                    $response['error'] = ['msg' => '활성 고객이 있는 벤더는 삭제할 수 없습니다.', 'code' => 409];
+                    Finish();
+                }
+
+                $tb_nm = 'vendors';
+                $sql = "UPDATE `vendors` SET `is_active` = 0, `updated_at` = NOW() WHERE `vendor_id` = '{$vendorIdEsc}'";
+                query($sql);
+$response['item']['sql'] = $sql;
+                $response['result'] = true;
+                $response['item'] = ['message' => '벤더가 삭제되었습니다.'];
+                Finish();
+                break;
+
+            default:
+                $response['error'] = sendError(400, true);
+                Finish();
+        }
+    } catch (Exception $e) {
+        // 공통 함수로 에러 메시지 변환
+        $errorMsg = getFriendlyErrorMessage($e->getMessage());
+
+        $response['error'] = ['msg' => $errorMsg, 'code' => $e->getCode() ?: 500];
+        Finish();
+    }
+}
+
+// ========================================
+// 페이지 렌더링 - 필터 파라미터
+// ========================================
+$filterVendor = isset($_GET['vendor']) ? $_GET['vendor'] : '';
+$searchKeyword = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// 검색 키워드 공백 분리 처리
+$searchKeywords = [];
+if ($searchKeyword) {
+    $searchKeywords = array_filter(array_map('trim', explode(' ', $searchKeyword)));
+}
+
+// 벤더별 고객 통계 조회
+$sql = "
+SELECT
+    v.vendor_id,
+    v.company_name as vendor_name,
+    v.business_number,
+    v.ceo_name,
+    u.email,
+    u.phone,
+    COUNT(DISTINCT c.customer_id) as customer_count,
+    COUNT(DISTINCT CASE WHEN s.status = 'ACTIVE' THEN c.customer_id END) as active_count,
+    COUNT(DISTINCT sit.site_id) as site_count,
+    COUNT(DISTINCT d.device_id) as device_count
+FROM vendors v
+LEFT JOIN users u ON v.user_id = u.user_id
+LEFT JOIN customers c ON v.vendor_id = c.vendor_id AND c.is_active = 1
+LEFT JOIN subscriptions s ON c.customer_id = s.customer_id
+LEFT JOIN sites sit ON c.customer_id = sit.customer_id AND sit.is_active = 1
+LEFT JOIN device_groups dg ON sit.site_id = dg.site_id
+LEFT JOIN devices d ON dg.group_id = d.group_id
+WHERE v.deleted_at IS NULL
+";
+
+$params = [];
+$types = '';
+
+// 벤더 필터
+if ($filterVendor) {
+    $sql .= " AND v.vendor_id = ?";
+    $params[] = $filterVendor;
+    $types .= 's';
+}
+
+// 검색 키워드 처리 (공백 분리 AND 검색)
+if (!empty($searchKeywords)) {
+    foreach ($searchKeywords as $keyword) {
+        $sql .= " AND (CONVERT(v.company_name USING utf8mb4) LIKE ?
+                    OR CONVERT(v.business_number USING utf8mb4) LIKE ?
+                    OR CONVERT(v.ceo_name USING utf8mb4) LIKE ?
+                    OR CONVERT(u.email USING utf8mb4) LIKE ?
+                    OR CONVERT(u.phone USING utf8mb4) LIKE ?
+                    OR CONVERT(u.name USING utf8mb4) LIKE ?)";
+        $searchParam = "%{$keyword}%";
+        $params[] = $searchParam;
+        $params[] = $searchParam;
+        $params[] = $searchParam;
+        $params[] = $searchParam;
+        $params[] = $searchParam;
+        $params[] = $searchParam;
+        $types .= 'ssssss';
+    }
+}
+
+$sql .= " GROUP BY v.vendor_id ORDER BY customer_count DESC LIMIT 100";
+$response['item']['sql'] = $sql;
+$stmt = mysqli_prepare($con, $sql);
+
+// 파라미터 바인딩
+if (!empty($params)) {
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+}
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+$vendors = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $vendors[] = $row;
+}
+
+mysqli_stmt_close($stmt);
+
+// 벤더 목록 (필터용)
+$vendorListSql = "SELECT vendor_id, company_name as name FROM vendors WHERE deleted_at IS NULL ORDER BY company_name";
+$response['item']['vendorListSql'] = $vendorListSql;
+$vendorListResult = mysqli_query($con, $vendorListSql);
+$vendorList = [];
+while ($row = mysqli_fetch_assoc($vendorListResult)) {
+    $vendorList[] = $row;
+}
+?>
+<section class="card">
+  <div class="card-hd">
+    <div class="filter-toolbar">
+      <div class="card-ttl">벤더별 고객 현황</div>
+      <div class="card-sub">벤더별 고객 수 및 기기 현황</div>
+    </div>
+    <div class="filter-toolbar">
+      <div class="filter-group">
+        <label>벤더</label>
+        <select id="filterVendor" class="form-control filter-select">
+          <option value="">전체 벤더</option>
+          <?php foreach ($vendorList as $v): ?>
+          <option value="<?php echo htmlspecialchars($v['vendor_id']); ?>" <?php echo $filterVendor === $v['vendor_id'] ? 'selected' : ''; ?>>
+            <?php echo htmlspecialchars($v['name']); ?>
+          </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>검색</label>
+        <input type="text" id="searchKeyword" class="form-control" placeholder="회사명/이메일/대표자/사업자번호/담당자명 검색" style="max-width:320px" value="<?php echo htmlspecialchars($searchKeyword); ?>">
+      </div>
+      <button id="btnFilter" class="btn primary">조회</button>
+      <button id="btnAddVendor" class="btn primary">신규 벤더 등록</button>
+      <button id="btnExportCsv" class="btn">CSV 내보내기</button>
+    </div>
+  </div>
+
+  <div class="card-bd">
+    <div class="table-wrap">
+  <table class="table" id="tblVendorCustomers">
+    <thead>
+      <tr>
+        <th>벤더 ID</th>
+        <th>벤더명</th>
+        <th>총 고객 수</th>
+        <th>활성 고객</th>
+        <th>사이트 수</th>
+        <th>기기 수</th>
+        <th>활성화</th>
+        <th>관리</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if (empty($vendors)): ?>
+      <tr>
+        <td colspan="8" class="table-empty-state">조회된 데이터가 없습니다.</td>
+      </tr>
+      <?php else: ?>
+      <?php foreach ($vendors as $vendor): ?>
+      <tr>
+        <td><?php echo htmlspecialchars($vendor['vendor_id']); ?></td>
+        <td><strong><?php echo htmlspecialchars($vendor['vendor_name']); ?></strong></td>
+        <td><?php echo number_format($vendor['customer_count']); ?></td>
+        <td><?php echo number_format($vendor['active_count']); ?></td>
+        <td><?php echo number_format($vendor['site_count']); ?></td>
+        <td><?php echo number_format($vendor['device_count']); ?></td>
+        <td>
+          <label class="switch">
+            <input type="checkbox" checked onchange="toggleVendorStatus('<?php echo htmlspecialchars($vendor['vendor_id']); ?>', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </td>
+        <td>
+          <button class="btn-sm btn-secondary" onclick="editVendor('<?php echo htmlspecialchars($vendor['vendor_id']); ?>')">수정</button>
+          <button class="btn-sm btn-danger" onclick="deleteVendor('<?php echo htmlspecialchars($vendor['vendor_id']); ?>', '<?php echo htmlspecialchars($vendor['vendor_name']); ?>')">삭제</button>
+        </td>
+      </tr>
+      <?php endforeach; ?>
+      <?php endif; ?>
+    </tbody>
+  </table>
+    </div>
+  </div>
+</section>
+
+<!-- 벤더 추가/수정 모달 -->
+<div id="vendorModal" class="modal">
+  <div class="modal-content" class="modal-content-md">
+    <div class="modal-header">
+      <h3 id="modalTitle">신규 벤더 등록</h3>
+      <span class="modal-close" onclick="closeVendorModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <form id="frmVendor">
+        <input type="hidden" id="vendorId" name="vendor_id">
+        <input type="hidden" id="modalMode" value="add">
+
+        <div class="form-group">
+          <label for="vendorName">벤더명 <span class="required-mark">*</span></label>
+          <input type="text" id="vendorName" name="name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="businessNumber">사업자번호</label>
+          <input type="text" id="businessNumber" name="business_number" class="form-control" placeholder="000-00-00000">
+        </div>
+
+        <div class="form-group">
+          <label for="ceoName">대표자명</label>
+          <input type="text" id="ceoName" name="ceo_name" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="vendorPhone">연락처</label>
+          <input type="tel" id="vendorPhone" name="phone" class="form-control" placeholder="02-0000-0000">
+        </div>
+
+        <div class="form-group">
+          <label for="vendorEmail">이메일</label>
+          <input type="email" id="vendorEmail" name="email" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="vendorAddress">주소</label>
+          <textarea id="vendorAddress" name="address" class="form-control" rows="2"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="vendorNotes">비고</label>
+          <textarea id="vendorNotes" name="notes" class="form-control" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn" onclick="closeVendorModal()">취소</button>
+      <button type="button" class="btn primary" onclick="saveVendor()">저장</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+</style>
+
+<script>
+// 필터 조회 - .off().on() 패턴 사용
+$('#btnFilter').off('click').on('click', function() {
+  const vendor = document.getElementById('filterVendor').value;
+  const search = document.getElementById('searchKeyword').value;
+  const params = new URLSearchParams();
+  if (vendor) params.append('vendor', vendor);
+  if (search) params.append('search', search);
+
+  // 현재 탭 페이지 리로드
+  loadCustomerTab(document.querySelector('.tab-btn-inline.active'), 'customer_vendor?' + params.toString());
+});
+
+// 신규 벤더 등록 버튼 - .off().on() 패턴 사용
+$('#btnAddVendor').off('click').on('click', function() {
+  openVendorModal('add');
+});
+
+// CSV 내보내기 - .off().on() 패턴 사용
+$('#btnExportCsv').off('click').on('click', function() {
+  const table = document.getElementById('tblVendorCustomers');
+  const rows = Array.from(table.querySelectorAll('thead tr, tbody tr'));
+
+  const csv = rows.map(row => {
+    const cells = Array.from(row.querySelectorAll('th, td'));
+    return cells.slice(0, -2).map(cell => {
+      return '"' + cell.textContent.trim().replace(/"/g, '""') + '"';
+    }).join(',');
+  }).join('\n');
+
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'HQ_벤더별고객_' + new Date().toISOString().slice(0,10) + '.csv';
+  link.click();
+});
+
+// 모달 열기
+function openVendorModal(mode, vendorId = null) {
+  const modal = document.getElementById('vendorModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMode = document.getElementById('modalMode');
+
+  modalMode.value = mode;
+  document.getElementById('frmVendor').reset();
+  document.getElementById('vendorId').value = '';
+
+  if (mode === 'add') {
+    modalTitle.textContent = '신규 벤더 등록';
+  } else {
+    modalTitle.textContent = '벤더 수정';
+    loadVendorData(vendorId);
+  }
+
+  modal.classList.add('show');
+}
+
+// 모달 닫기
+function closeVendorModal() {
+  document.getElementById('vendorModal').classList.remove('show');
+}
+
+// 벤더 수정
+function editVendor(vendorId) {
+  openVendorModal('edit', vendorId);
+}
+
+// 벤더 데이터 로드
+function loadVendorData(vendorId) {
+  const data = {
+    action: 'get_vendor',
+    vendor_id: vendorId
+  };
+
+  updateAjaxContent(data, function(response) {
+    if (response.result && response.item) {
+      const vendor = response.item;
+      document.getElementById('vendorId').value = vendor.vendor_id;
+      document.getElementById('vendorName').value = vendor.name;
+      document.getElementById('businessNumber').value = vendor.business_number || '';
+      document.getElementById('ceoName').value = vendor.ceo_name || '';
+      document.getElementById('vendorPhone').value = vendor.phone || '';
+      document.getElementById('vendorEmail').value = vendor.email || '';
+      document.getElementById('vendorAddress').value = vendor.address || '';
+      document.getElementById('vendorNotes').value = vendor.notes || '';
+    } else {
+      alert(response.error?.msg || '벤더 정보를 불러올 수 없습니다.');
+    }
+  }, false);
+}
+
+// 벤더 저장
+function saveVendor() {
+  const form = document.getElementById('frmVendor');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const mode = document.getElementById('modalMode').value;
+  const data = {
+    action: mode === 'add' ? 'add_vendor' : 'update_vendor',
+    name: document.getElementById('vendorName').value,
+    business_number: document.getElementById('businessNumber').value,
+    ceo_name: document.getElementById('ceoName').value,
+    phone: document.getElementById('vendorPhone').value,
+    email: document.getElementById('vendorEmail').value,
+    address: document.getElementById('vendorAddress').value,
+    notes: document.getElementById('vendorNotes').value
+  };
+
+  if (mode === 'edit') {
+    data.vendor_id = document.getElementById('vendorId').value;
+  }
+
+  updateAjaxContent(data, function(response) {
+    if (response.result) {
+      toast(response.item?.message || '저장되었습니다.');
+      closeVendorModal();
+      setTimeout(() => location.reload(), 500);
+    } else {
+      alert(response.error?.msg || '저장에 실패했습니다.');
+    }
+  }, false);
+}
+
+// 벤더 활성화/비활성화
+function toggleVendorStatus(vendorId, isActive) {
+  const data = {
+    action: 'toggle_vendor_status',
+    vendor_id: vendorId,
+    is_active: isActive ? '1' : '0'
+  };
+
+  updateAjaxContent(data, function(response) {
+    if (response.result) {
+      toast(response.item?.message || '상태가 변경되었습니다.');
+    } else {
+      alert(response.error?.msg || '상태 변경에 실패했습니다.');
+      location.reload();
+    }
+  }, false);
+}
+
+// 벤더 삭제
+function deleteVendor(vendorId, name) {
+  if (!confirm(`벤더 "${name}"을(를) 삭제하시겠습니까?\n\n주의: 해당 벤더와 연결된 모든 데이터가 영향을 받을 수 있습니다.`)) {
+    return;
+  }
+
+  const data = {
+    action: 'delete_vendor',
+    vendor_id: vendorId
+  };
+
+  updateAjaxContent(data, function(response) {
+    if (response.result) {
+      toast(response.item?.message || '삭제되었습니다.');
+      setTimeout(() => location.reload(), 500);
+    } else {
+      alert(response.error?.msg || '삭제에 실패했습니다.');
+    }
+  }, false);
+}
+
+// Toast 알림
+function toast(msg) {
+  const div = document.createElement('div');
+  div.className = 'toast';
+  div.textContent = msg;
+  div.style.cssText = 'position:fixed; top:20px; right:20px; background:var(--accent); color:#fff; padding:12px 16px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:10000;';
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 1800);
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function(event) {
+  const modal = document.getElementById('vendorModal');
+  if (event.target === modal) {
+    closeVendorModal();
+  }
+};
+</script>
+
