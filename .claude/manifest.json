@@ -1,0 +1,95 @@
+{
+  "version": "2.1",
+  "last_updated": "2025-11-12T15:30:00+09:00",
+  "description": "디스펜서 영업 관리 시스템 - 개발 문서 색인",
+
+  "structure": {
+    "rules": ".claude/rules/",
+    "guides": "docs/",
+    "schema": "schema.sql",
+    "code": "public/"
+  },
+
+  "index": {
+    "pagination": {
+      "rule": ".claude/rules/03-coding-standards.md#페이징-시스템-pagination",
+      "guide": "docs/PAGINATION_IMPLEMENTATION.md",
+      "files": [
+        "public/inc/common_pagination.php",
+        "public/js/js.php (changePage 함수)",
+        "public/css/hq.css (페이징 스타일)"
+      ],
+      "examples": [
+        "public/doc/hq/customer_list.php (일반 쿼리)",
+        "public/doc/hq/vendor_mgmt.php (GROUP BY)"
+      ]
+    },
+    "security": {
+      "rule": ".claude/rules/03-coding-standards.md#보안-규칙",
+      "api": ".claude/rules/04-api-reference.md#암복호화-함수",
+      "files": [
+        "public/inc/functions/encrypt.php"
+      ]
+    },
+    "ajax": {
+      "rule": ".claude/rules/03-coding-standards.md#ajax-라우팅-규칙",
+      "files": [
+        "public/_ajax_.php",
+        "public/.htaccess"
+      ]
+    },
+    "database": {
+      "rule": ".claude/rules/05-database.md",
+      "schema": "schema.sql"
+    },
+    "ui-components": {
+      "rule": ".claude/rules/06-ui-components.md",
+      "files": [
+        "public/css/hq.css",
+        "public/css/style.css"
+      ]
+    },
+    "business-policies": {
+      "rule": ".claude/rules/07-business-policies.md"
+    }
+  },
+
+  "quick_reference": {
+    "start": ".claude/rules/01-quick-start.md",
+    "architecture": ".claude/rules/02-architecture.md",
+    "coding_standards": ".claude/rules/03-coding-standards.md",
+    "api_reference": ".claude/rules/04-api-reference.md",
+    "database": ".claude/rules/05-database.md",
+    "ui_components": ".claude/rules/06-ui-components.md",
+    "business_policies": ".claude/rules/07-business-policies.md",
+    "troubleshooting": ".claude/rules/08-troubleshooting.md"
+  },
+
+  "changelog": [
+    {
+      "date": "2025-11-12",
+      "version": "2.1",
+      "changes": [
+        "페이징 시스템 구현 완료 (모든 HQ 페이지)",
+        "03-coding-standards.md에 페이징 섹션 추가",
+        "docs/PAGINATION_IMPLEMENTATION.md 상세 가이드 작성",
+        "00-README.md 업데이트 (페이징 참조 추가)"
+      ]
+    },
+    {
+      "date": "2025-11-12",
+      "version": "2.0",
+      "changes": [
+        "문서 구조 개편 (00-08 파일 체계)",
+        "모듈화된 규칙 문서로 분리",
+        "네비게이션 허브 (00-README.md) 개선"
+      ]
+    }
+  ],
+
+  "notes": {
+    "backup": "주기적 백업 권장 (Git 커밋)",
+    "versioning": "Git 기반 버전 관리 사용",
+    "claude_integration": "Claude Code가 .claude/rules/ 자동 탐색"
+  }
+}

@@ -1,0 +1,20 @@
+# //.htaccess
+# 기본 문자셋 UTF-8 설정 (한글 경로 대응)
+AddDefaultCharset UTF-8
+
+# mod_rewrite 사용 설정
+RewriteEngine On
+RewriteBase /
+
+# robots.txt 접근 허용 (상위 디렉터리의 robots.txt)
+RewriteRule ^robots\.txt$ - [L]
+
+# 실제 파일/디렉터리면 리라이트 패스
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 한글, 영문, 숫자, URL-safe Base64 토큰(-,_ ,= 포함) 형태의 단일 경로를
+# _ajax_.php로 내부 리디렉션 (QUERY STRING 없이 PATH_INFO로 전달)
+# RewriteRule ^([가-힣A-Za-z0-9\-\_,=]+)$ _ajax_.php/$1 [L,QSA]
+RewriteRule ^(.+)$ _ajax_.php  [L]

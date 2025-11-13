@@ -1,0 +1,154 @@
+
+/* =======================================================================================
+   프로그램 수정(개선) 요청서 — 스타일시트
+   - 목적: 워드 내보내기 HTML을 정리한 가독성 높은 출력용 폼
+   - 구성: 기본 리셋 → 문서 레이아웃 → 타이포그래피 → 테이블 → 폼 컨트롤 → 프린트
+   ======================================================================================= */
+
+/* ============ 0) 기본 리셋(필요 최소) ============ */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+img { max-width: 100%; display: block; }
+
+/* ============ 1) 문서 레이아웃 ============ */
+/* 화면에서 A4 비율로 표시 + 중앙 정렬 */
+.a4 {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 12mm auto;
+  background: #fff;
+  padding: 14mm 16mm;
+  box-shadow: 0 2mm 8mm rgba(0,0,0,.08);
+  border: 1px solid #eee;
+}
+
+/* ============ 2) 타이포그래피 ============ */
+:root {
+  --text: #111827;          /* 거의 검정 */
+  --muted: #6b7280;         /* 회색(설명) */
+  --line: #e5e7eb;          /* 표 라인 */
+  --th-bg: #f3f4f6;         /* 표 헤더 배경 */
+  --brand: #2563eb;         /* 포인트 */
+  --radius: 10px;
+}
+
+body {
+  color: var(--text);
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', '맑은 고딕', 'Malgun Gothic', '굴림', Gulim, sans-serif;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* 헤더 */
+.doc-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12mm;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 8mm;
+}
+
+.doc-header h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: .2px;
+}
+
+.doc-header .meta {
+  color: var(--muted);
+  font-size: 13px;
+}
+.doc-header .meta .label { margin-right: 6px; color: var(--text); font-weight: 600; }
+
+/* ============ 3) 표(폼 레이아웃) ============ */
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.form-table th,
+.form-table td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  vertical-align: middle;
+  background: #fff;
+}
+
+.form-table th {
+  width: 18%;
+  background: var(--th-bg);
+  font-weight: 700;
+  text-align: center;
+}
+
+.form-table .col-th { width: 18%; }
+
+.form-table .deadline label,
+.form-table .category label,
+.form-table .notify label {
+  margin-right: 14px;
+  white-space: nowrap;
+}
+
+/* 세부 타이틀 줄바꿈용 */
+.form-table th br { content: ""; }
+
+/* ============ 4) 폼 컨트롤 ============ */
+.input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.input.inline {
+  width: auto;
+  min-width: 140px;
+  margin-left: 6px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font: inherit;
+  resize: vertical;
+}
+
+/* 체크박스 여백 정리 */
+label > input[type="checkbox"] {
+  transform: translateY(1px);
+  margin-right: 6px;
+}
+
+/* 기타 입력 */
+.category .etc .input.inline {
+  min-width: 220px;
+}
+
+/* ============ 5) 인쇄 최적화 ============ */
+@media print {
+  @page { size: A4; margin: 12mm; }
+  .a4 {
+    width: auto;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+  .doc-header { margin-bottom: 10mm; padding-bottom: 6mm; }
+  .input, .textarea {
+    border-color: #cfd3d7;
+  }
+}

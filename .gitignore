@@ -1,0 +1,20 @@
+# Session files
+public/inc/sessions/*
+
+# Corrupted git backup
+.git.corrupted.backup/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+
+# Large binary files
+dev tool/*.exe

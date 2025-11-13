@@ -1,0 +1,58 @@
+[
+  {
+    "branch": "A지점",
+    "groups": [
+      {
+        "group": "1층",
+        "locations": [
+          { "location": "홀" },
+          { "location": "화장실" },
+          { "location": "탕비실" }
+        ]
+      },
+      {
+        "group": "2층",
+        "locations": [
+          { "location": "회의실 1" },
+          { "location": "회의실 2" },
+          { "location": "창고" }
+        ]
+      },
+      {
+        "group": "지하",
+        "locations": [
+          { "location": "전기실" },
+          { "location": "기계실" }
+        ]
+      }
+    ]
+  },
+  {
+    "branch": "B지점",
+    "groups": [
+      {
+        "group": "1층",
+        "locations": [
+          { "location": "리셉션" },
+          { "location": "홀" },
+          { "location": "화장실" }
+        ]
+      },
+      {
+        "group": "별관",
+        "locations": [
+          { "location": "회의실 A" },
+          { "location": "회의실 B" },
+          { "location": "라운지" }
+        ]
+      },
+      {
+        "group": "옥상",
+        "locations": [
+          { "location": "흡연구역" },
+          { "location": "휴게공간" }
+        ]
+      }
+    ]
+  }
+]

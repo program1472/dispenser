@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"D:\\php\\server\\MariaDB10\\bin\\mysql.exe\" -u program1472 -p'$gPfls1129' dispenser --default-character-set=utf8mb4 -e \"\nSET NAMES utf8mb4;\n\n-- 새로 추가한 고객의 customer_id 확인\nSELECT customer_id, company_name, ceo_name, DATE(created_at) as contract_date\nFROM customers\nWHERE vendor_id IS NULL AND customer_id >= 50\nORDER BY customer_id;\n\")",
+      "Bash(\"D:\\php\\server\\MariaDB10\\bin\\mysql.exe\":*)",
+      "Bash(\"D:\\php\\server\\MariaDB10\\bin\\mysql.exe\" -u program1472 -p'$gPfls1129' dispenser --default-character-set=utf8mb4 -e \"\nSET NAMES utf8mb4;\n\n-- 본사 직접 고객 데이터 확인\nSELECT customer_id, company_name, ceo_name, HEX(company_name) as hex_name, LENGTH(company_name) as len\nFROM customers\nWHERE vendor_id IS NULL AND deleted_at IS NULL\nORDER BY customer_id;\n\")",
+      "Bash(\"D:\\php\\server\\MariaDB10\\bin\\mysql.exe\" -u program1472 -p'$gPfls1129' dispenser:*)",
+      "Bash(\"D:\\php\\server\\MariaDB10\\bin\\mysql.exe\" -u program1472 -p'$gPfls1129' dispenser --default-character-set=utf8mb4 -e \"\nSET NAMES utf8mb4;\n\n-- 1. 본사 직접 고객 목록 (UTF-8 인코딩 확인)\nSELECT \n    c.customer_id,\n    c.company_name,\n    c.ceo_name,\n    DATE_FORMAT(c.created_at, ''%Y-%m'') as contract_month,\n    COUNT(DISTINCT s.subscription_id) as subscription_count,\n    SUM(s.monthly_fee) as total_monthly_fee\nFROM customers c\nLEFT JOIN subscriptions s ON c.customer_id = s.customer_id AND s.deleted_at IS NULL\nWHERE c.vendor_id IS NULL AND c.deleted_at IS NULL\nGROUP BY c.customer_id, c.company_name, c.ceo_name, DATE_FORMAT(c.created_at, ''%Y-%m'')\nORDER BY c.created_at;\n\")",
+      "Bash(\"D:\\php\\server\\MariaDB10\\bin\\mysql.exe\" -u program1472 -p'$gPfls1129' dispenser --default-character-set=utf8mb4 -e \"\nSET NAMES utf8mb4;\n\n-- 본사 탭 KPI 최종 확인\nSELECT\n    ''본사 직접 매출 KPI'' as category,\n    COUNT(DISTINCT c.customer_id) as total_customers,\n    COUNT(DISTINCT cs.site_id) as total_sites,\n    COUNT(DISTINCT s.subscription_id) as total_subscriptions,\n    SUM(s.monthly_fee) as total_revenue\nFROM customers c\nLEFT JOIN customer_sites cs ON c.customer_id = cs.customer_id AND cs.deleted_at IS NULL\nLEFT JOIN subscriptions s ON c.customer_id = s.customer_id\n    AND s.deleted_at IS NULL\n    AND s.status = ''ACTIVE''\n    AND s.start_date <= ''2025-11-30''\n    AND s.end_date >= ''2023-01-01''\nWHERE c.is_active = 1\n    AND c.deleted_at IS NULL\n    AND (c.vendor_id IS NULL OR c.vendor_id = '''');\n\")",
+      "Bash(git reset:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(cat:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "autoApprove": true
+}
